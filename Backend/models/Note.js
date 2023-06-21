@@ -5,19 +5,19 @@ const NotesSchema = new Schema({
    type:mongoose.Schema.Types.ObjectId,
    ref:'User'
    },
-   title:[{
+   title:{
     type :String,
     require:true
-   }],
-   description: [{
+   },
+   description: {
     type :String,
     require:true
-   }],
-   tag:[{
+   },
+   tag:{
     type :String,
     default:"Genaral"
     
-   }],
+   },
    date:{
     type :Date ,
     default:Date.now

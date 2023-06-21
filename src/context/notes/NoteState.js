@@ -14,22 +14,13 @@ const addNote= async (title,description,tag)=>{
     headers: {
       
       'Content-Type': 'application/json',
-      "authToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ4YWZjZTMxMjc5YzI0ZDQ5NDgxNjU3In0sImlhdCI6MTY4Njg0OTQwNX0.OwHYnQWOtKea4HjK1pFJWBO8hrvHv-Cnb2qqUVvDMnc"
+      "authToken":localStorage.getItem("token")
     },
     body: JSON.stringify({title,description,tag}),
   });
   
   console.log("adding note")
-   const json= response.json();
-  const note={
-    "user": "648afce31279c24d49481657",
-    "title":title,
-    "description":description,
-    "tag":tag,
-    "_id": "64903e4dceb4c2e766238c9d",
-    "date": "2023-06-19T06:22:03.576Z",
-    "__v": 0
-  }
+   const note= await response.json();
 setNotes(notes.concat(note));
 }
 
@@ -39,13 +30,13 @@ const getNotes=async ()=>{
     method: "GET", 
     headers: {
       "Content-Type": "application/json",
-      "authToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ4YWZjZTMxMjc5YzI0ZDQ5NDgxNjU3In0sImlhdCI6MTY4Njg0OTQwNX0.OwHYnQWOtKea4HjK1pFJWBO8hrvHv-Cnb2qqUVvDMnc"
+      "authToken":localStorage.getItem("token")
     },
   
   });
   const json=await response.json();
 
-setNotes(json)
+setNotes(json);
 }
 
 
@@ -56,14 +47,15 @@ const deleteNote=async (id)=>{
     method: "DELETE", 
     headers: {
       "Content-Type": "application/json",
-      "authToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ4YWZjZTMxMjc5YzI0ZDQ5NDgxNjU3In0sImlhdCI6MTY4Njg0OTQwNX0.OwHYnQWOtKea4HjK1pFJWBO8hrvHv-Cnb2qqUVvDMnc"
+      "authToken":localStorage.getItem("token")
     },
    
   });
-  const json= response.json();
+  const json= await response.json();
 
 
   console.log("deleting note");
+  console.log(json)
 const newNotes=notes.filter((note)=>{return note._id!==id})
 setNotes(newNotes);
 
@@ -76,21 +68,25 @@ const editNote=async (id,title,description,tag)=>{
     method: "PUT", 
     headers: {
       "Content-Type": "application/json",
-      "authToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjQ4YWZjZTMxMjc5YzI0ZDQ5NDgxNjU3In0sImlhdCI6MTY4Njg0OTQwNX0.OwHYnQWOtKea4HjK1pFJWBO8hrvHv-Cnb2qqUVvDMnc"
+      "authToken":localStorage.getItem("token")
     },
     body: JSON.stringify({title,description,tag}), 
   });
-  const json= response.json();
+  const json= await response.json();
+  console.log(json)
 
-  for (let index = 0; index < notes.length; index++) {
-    const element = notes[index];
+let newNotes=JSON.parse(JSON.stringify(notes))
+
+  for (let index = 0; index < newNotes.length; index++) {
+    const element = newNotes[index];
     if (element._id===id) {
       element.title=title;
       element.description=description;
         element.tag=tag;
-      
+      break;
     }
   }
+  setNotes(newNotes)
 }
     return(
 
